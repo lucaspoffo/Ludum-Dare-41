@@ -1,39 +1,75 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
     public PlayerNavigation playerNavigation;
     public ObjectActions startObject;
     public GameObject player;
+    public GameObject objectText;
+    public List<ObjectActions> allObjects;
+    public GameObject textPrefab;
+    public Camera camera;
+    public Canvas canvas;
+    public Color activeColor;
+    public Color inactiveColor;
 
-	// Use this for initialization
-	void Start () {
+    private bool gameHasEnded = false;
+    public float restartDelay = 1f;
+    public float loadNextLevelDelay = 1f;
+
+    private void Awake()
+    {
+        ObjectActions[] all = Object.FindObjectsOfType<ObjectActions>();
+        for(int i = 0; i < all.Length; i++)
+        {
+            allObjects.Add(all[i]);
+            GameObject textObject = Instantiate(textPrefab);
+            textObject.transform.SetParent(canvas.transform, false);
+            RectTransform rect = textObject.GetComponent<RectTransform>();
+            Text text = textObject.GetComponent<Text>();
+            text.text = all[i].name;
+            all[i].text = text;
+            all[i].text.color = inactiveColor;
+            all[i].textTransform = rect;
+            //rect.position = camera.WorldToScreenPoint(all[i].transform.position);
+            rect.position = all[i].transform.position;
+        }
+
+
+    }
+
+    // Use this for initialization
+    void Start () {
         playerNavigation = GetComponent<PlayerNavigation>();
         playerNavigation.changeObject(startObject);
-        DisplayCurrentObject();
-    }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    public void changePlayerPosition()
-    {
-        player.transform.position = playerNavigation.currentObject.transform.position;
-        player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z - 1);
     }
 
-    public void DisplayCurrentObject()
+    public void EndGame()
     {
-        Debug.Log(playerNavigation.currentObject.name);
-        Debug.Log("Available Objects: ");
-        for(int i = 0; i < playerNavigation.currentObject.actions.Length;i++)
+        if(!gameHasEnded)
         {
-            Debug.Log(playerNavigation.currentObject.actions[i].name);
+            gameHasEnded = true;
+            Invoke("Restart", restartDelay);
         }
-        Debug.Log("-----------------");
     }
+
+	void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void NextLevel()
+    {
+        Invoke("LoadNextLevel", loadNextLevelDelay);
+    }
+
+    void LoadNextLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
 }

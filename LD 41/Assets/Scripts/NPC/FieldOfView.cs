@@ -24,12 +24,8 @@ public class FieldOfView : MonoBehaviour
         DrawFieldOfView();
     }
 
-    public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
+    public Vector3 DirFromAngle(float angleInDegrees)
     {
-        if (!angleIsGlobal)
-        {
-            angleInDegrees += transform.eulerAngles.z;
-        }
         return new Vector3(-Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), Mathf.Cos(angleInDegrees * Mathf.Deg2Rad), 0);
     }
 
@@ -70,7 +66,7 @@ public class FieldOfView : MonoBehaviour
 
     ViewCastInfo ViewCast(float globalAngle)
     {
-        Vector3 dir = DirFromAngle(globalAngle, true);
+        Vector3 dir = DirFromAngle(globalAngle);
         Vector2 dir2 = new Vector2(dir.x, dir.y);
         RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), dir2, viewRadius);
         if (hit.collider != null)

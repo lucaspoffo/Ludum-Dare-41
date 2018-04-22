@@ -18,19 +18,25 @@ public class TextInput : MonoBehaviour {
 	
     void AcceptStringInput(string userInput)
     {
-        userInput = userInput.ToLower();
-        playerNavigation.tryAction(userInput);
-        InputComplete();
-    }
-
-    void InputComplete()
-    {
+        if(playerNavigation.nearTarget)
+        {
+            userInput = userInput.ToLower();
+            playerNavigation.tryAction(userInput);
+            inputField.text = null;
+        }
         inputField.ActivateInputField();
-        inputField.text = null;
     }
 
 	// Update is called once per frame
 	void Update () {
-		
+		if(playerNavigation.nearTarget)
+        {
+            inputField.enabled = true;
+            inputField.ActivateInputField();
+        }
+        else
+        {
+            inputField.enabled = false;
+        }
 	}
 }
