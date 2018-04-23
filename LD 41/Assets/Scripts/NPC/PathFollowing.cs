@@ -59,7 +59,7 @@ public class PathFollowing : MonoBehaviour
         {
 
             float dist = Vector3.Distance(transform.position, paths[current].transform.position);
-            if (dist < 1)
+            if (dist < .5f)
             {
                 destSetter.target = null;
                 for (int i = 0; i < paths[current].actions.Length; i++)
