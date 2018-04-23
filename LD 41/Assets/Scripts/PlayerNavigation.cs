@@ -67,15 +67,13 @@ public class PlayerNavigation : MonoBehaviour {
 
     public void tryAction(string action)
     {
+        action = action.ToUpper();
         if(availableActions.ContainsKey(action))
         {
-            if(action == "exit")
-            {
+            if(action == "EXIT")
                 controller.NextLevel();
-            } else
-            {
-                changeObject(availableActions[action]);
-            }
+
+            changeObject(availableActions[action]);
         }
         else
         {

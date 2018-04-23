@@ -21,8 +21,10 @@ public class PathFollowing : MonoBehaviour
         
         destSetter = GetComponent<AIDestinationSetter>();
         fieldOfView = GetComponent<FieldOfView>();
+        paths = transform.parent.GetComponentsInChildren<PathObject>();
         destSetter.target = paths[current].transform;
         player = GameObject.FindGameObjectWithTag("Player");
+
     }
 
     private void Start()
